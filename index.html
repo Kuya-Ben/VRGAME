@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solid Wall</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+  <script src="blockwall.js"></script>
+  <script src="castle.js"></script>
+  <script src="terrain.js"></script>
+</head>
+<body>
+  <a-scene>
+
+    <a-assets>
+    <a-assets-item id="stone" src="08/assets/Rocks by Kay Lousberg - XVRCQ0j2AF.glb"></a-assets-item>
+      <a-asset-item id="birchTree" src="08/assets/Birch Trees by Quaternius - R7qMWzb7nk.glb"></a-asset-item>
+      <a-asset-item id="tree" src="08/assets/tree.glb"></a-asset-item>
+      <a-asset-item id="grass" src="08/assets/grass.glb"></a-asset-item>
+      <a-asset-item id="guard2" src="08/assets/guard2.glb"></a-asset-item>
+      <a-asset-item id="guard" src="08/assets/Mech by Quaternius - D5wW2jDO42.glb"></a-asset-item>
+      <a-asset-item id="mymodel" src="08/assets/Cottage by CreativeTrio - YDGLLT0emC.glb"></a-asset-item>
+      <a-asset-item id="foxs" src="08/assets/Fox/glTF/Fox.gltf"></a-asset-item>
+      <a-asset-item id="dg" src="08/assets/kaido_dragon_form/scene.gltf"></a-asset-item>
+      <img id="roof" src="08/assets/roof.jpg">
+      <img id="skyImg" src="08/assets/sky.jpg">
+      <img id="tiles" src="08/assets/tiles.png">
+      <img id="MULTI" src="08/assets/multiverse.png">
+      <img id="Floor" src="08/assets/Weathered Mossy Stone Tile Floor.png">
+      <img id="brick" src="06-IMGs/broken_brick_wall_4k.blend/textures/broken_brick_wall_diff_4k.jpg">
+      <img id="photo" src="08/assets/received_1000707622582576.jpeg">
+    </a-assets>
+
+    <a-sky src="#skyImg"></a-sky>
+    <a-light type="ambient" color="#ffffff" intensity="0.9"></a-light>
+<a-light type="directional" color="#fff4e0" intensity="0.8" position="-30 60 40"></a-light>
+    <!-- Floor -->
+    <a-entity  terrain="width: 500; depth: 550; flat: 100; blend: 70; height: 12"></a-entity>
+   <!-- Grass -->
+    <a-entity gltf-model="#grass" grass-scatter="count: 1000; exclude: 80"></a-entity>
+    <a-entity class="solid" gltf-model="#tree" grass-scatter="count: 100; exclude: 80; height: 8; minScale: 0.7; maxScale: 1.3; seed: 7"></a-entity>
+    <a-entity class="solid" gltf-model="#birchTree" grass-scatter="count: 100; exclude: 80; height: 8; minScale: 0.7; maxScale: 1.3; seed: 7"></a-entity>
+    <a-entity class="solid" gltf-model="#stone" grass-scatter="count: 100; exclude: 80; height: 8; minScale: 0.7; maxScale: 1.3; seed: 7"></a-entity>
+    <!-- Cottages -->
+    <a-entity class="solid" gltf-model="#mymodel" position="-64 0 -40" scale="50 50 50"></a-entity>
+    <a-entity class="solid" gltf-model="#mymodel" position="64 0 -40" scale="50 50 50"></a-entity>
+
+    <!-- Castle -->
+    <a-entity id="castle"
+              stone-castle="walltex: #brick; floortex: #Floor; rooftex: #roof; tile: 4"></a-entity>
+
+    <!-- Mech (FBX) -->
+    <a-entity fbx-model="src: url(08/assets/Mech by Quaternius - tLs9mFVCSU/Mech_FernandoTheFlamingo.fbx)"
+              position="1.4 0 40"
+              class="solid"
+              scale="0.01 0.01 0.01"></a-entity>
+
+    <!-- guards -->
+    <a-entity gltf-model="#guard2" class="solid" scale="2 2 2" position="-8 13 34"
+              animation="property: position; to: -8 15 34; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine"></a-entity>
+    <a-entity gltf-model="#guard" class="solid" scale="2 2 2" position="8 13 34"
+              animation="property: position; to: 8 15 34; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine"></a-entity>
+
+    <!-- Dragon -->
+    <a-entity gltf-model="#dg"
+              position="29 1 79"
+              class="solid"
+              scale="8 8 8"
+              rotation="80 0 0"
+              animation__spin="property: rotation; to: 80 360 0; dur: 8000; loop: true; easing: linear"
+              animation__fly="property: position; to: 29 10 79; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine"></a-entity>
+
+    <!-- Fox guards: one on each side of the gate, facing outward (+z) -->
+    <a-entity gltf-model="#foxs"
+              class="solid"
+              animation-mixer="clip: Survey; loop: repeat"
+              position="-6.5 0 83"
+              rotation="0 0 0"
+              scale="0.05 0.05 0.05">
+            </a-entity>
+    <a-entity gltf-model="#foxs"
+              class="solid"
+              animation-mixer="clip: Survey; loop: repeat"
+              position="5.5 0 83"
+              rotation="0 0 0"
+              scale="0.05 0.05 0.05"></a-entity>
+
+    <!-- Player: WASD to move, mouse to look -->
+    <a-entity camera position="1.4 2 50" look-controls
+              wasd-controls="acceleration: 100" wall-collider></a-entity>
+
+    <!-- Walls 150 x 150, gate 5 wide on the front (+z) side -->
+    <a-box class="solid" position="0 3 -75" width="151" height="6" depth="1"
+           material="src: #brick; repeat: 200 3"></a-box>
+    <a-box class="solid" position="-75 3 0" width="1" height="6" depth="150"
+           material="src: #brick; repeat: 200 3"></a-box>
+    <a-box class="solid" position="75 3 0" width="1" height="6" depth="150"
+           material="src: #brick; repeat: 200 3"></a-box>
+    <a-box class="solid" position="-38.75 3 75" width="72.5" height="6" depth="1"
+           material="src: #brick; repeat: 50 3"></a-box>
+    <a-box class="solid" position="38.75 3 75" width="72.5" height="6" depth="1"
+           material="src: #brick; repeat: 50 3"></a-box>
+
+    <!-- Gate posts and lintel -->
+    <a-box position="-3.1 4 75" width="1.2" height="8" depth="1.6" color="#6f717b"></a-box>
+    <a-box position="3.1 4 75" width="1.2" height="8" depth="1.6" color="#6f717b"></a-box>
+    <a-box position="0 6.5 75" width="7.4" height="1" depth="1.6" color="#6f717b"></a-box>
+
+  </a-scene>
+
+  <div id="pos" style="position:fixed;top:10px;left:10px;padding:14px 20px;
+     background:rgba(0,0,0,.6);color:#fff;font:28px monospace;
+     z-index:9999;border-radius:8px;pointer-events:none">x: 0 y: 0 z: 0</div>
+  <script>
+    setInterval(function () {
+      var cam = document.querySelector('[camera]');
+      if (!cam || !cam.object3D) return;
+      var p = cam.object3D.position;
+      document.getElementById('pos').textContent =
+        'x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '  z: ' + p.z.toFixed(1);
+    }, 100);
+  </script>
+</body>
+</html>
